@@ -1,0 +1,15 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: db-seed
+  namespace: challenge
+spec:
+  template:
+    spec:
+      containers:
+      - name: app
+        image: krishees/techchallengeapp
+        command: ["./TechChallengeApp"]
+        args: ["updatedb"]
+      restartPolicy: Never
+  backoffLimit: 4

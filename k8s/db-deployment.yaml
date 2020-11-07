@@ -1,0 +1,41 @@
+---
+#DB configs
+apiVersion: v1
+kind: Secret
+metadata:
+  name: db-secrets
+  namespace: challenge
+type: Opaque
+data:
+  POSTGRES_DB: Y2hhbGxlbmdl
+  POSTGRES_PASSWORD: c2hhZG93Zm94
+  POSTGRES_USER: c2Vydmlhbg==
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: challenge-db
+  namespace: challenge
+  labels:
+    app: challenge-db
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: challenge-db
+  template:
+    metadata:
+      labels:
+        app: challenge-db
+        version: 1.0v
+    spec:
+      containers:
+      - name: postgres
+        image: postgres
+        envFrom:
+        - secretRef:
+            name: db-secrets
+        ports:
+        - containerPort: 5432
+

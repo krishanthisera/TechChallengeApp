@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: challenge-app
+  namespace: challenge
+  labels:
+    app: challenge-app
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: challenge-app
+  template:
+    metadata:
+      labels:
+        app: challenge-app
+        version: 1.0v
+    spec:
+      containers:
+      - name: go
+        image: krishees/techchallengeapp
+        command: ["./TechChallengeApp"]
+        args: ["serve"]
+        ports:
+        - containerPort: 80
