@@ -1,4 +1,3 @@
-
 resource "aws_security_group" "K8s_worker_group_1" {
   name_prefix = "K8s_worker_group_1"
   vpc_id      = module.vpc.vpc_id
