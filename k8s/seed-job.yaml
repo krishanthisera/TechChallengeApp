@@ -9,7 +9,7 @@ spec:
       containers:
       - name: app
         image: krishees/techchallengeapp
-        command: ["./TechChallengeApp"]
-        args: ["updatedb"]
+        command: ["/bin/sh"]
+        args: ["-c", "echo 'Sleep time initiated - waiting on db to install'; sleep 180; ./TechChallengeApp updatedb"]
       restartPolicy: Never
   backoffLimit: 4

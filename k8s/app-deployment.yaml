@@ -19,7 +19,7 @@ spec:
       containers:
       - name: go
         image: krishees/techchallengeapp
-        command: ["./TechChallengeApp"]
-        args: ["serve"]
+        command: ["/bin/sh"]
+        args: ["-c", "echo 'Sleep time initiated - waiting on db to propergate'; sleep 120; ./TechChallengeApp serve"]
         ports:
         - containerPort: 80
