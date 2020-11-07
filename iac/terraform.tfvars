@@ -1,5 +1,4 @@
-
-aws_access_key = "<YOU_ACCESS_KEY>"
+aws_access_key = "<YOUR_ACCESS_KEY>"
 aws_secret_key = "<YOUR_SECRET_KEY>"
 
 #export AWS_ACCESS_KEY_ID=<YOU_ACCESS_KEY>
