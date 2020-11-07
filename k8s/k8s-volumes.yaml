@@ -23,4 +23,16 @@ spec:
   resources:
     requests:
       storage: 4Gi
-
+---
+#PVC for app
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: challenge-app-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: challenge-ebs-sc
+  resources:
+    requests:
+      storage: 4Gi
