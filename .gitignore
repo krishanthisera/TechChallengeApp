@@ -26,4 +26,5 @@ TechChallengeApp
 # Terraform 
 *.tfstate.backup
 *.tfstate
-*tfvars
+#*.tfvars
+*.tfplan
