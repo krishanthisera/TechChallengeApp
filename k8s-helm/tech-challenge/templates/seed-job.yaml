@@ -8,7 +8,10 @@ spec:
       containers:
       - name: app
         image: "{{ .Values.jobs.image.repository }}:{{ .Values.jobs.image.tag | default .Chart.AppVersion }}"
+        envFrom:
+        - secretRef:
+            name: {{ include "tech-challenge.fullname" . }}-app-config
         command: ["/bin/sh"]
-        args: ["-c", "echo 'Sleep time initiated - waiting on db to install'; sleep {{.Values.jobs.sleep}}; ./TechChallengeApp updatedb"]
+        args: ["-c", "echo 'Sleep time initiated - waiting on db to install'; sleep {{ .Values.jobs.sleep }}; ./TechChallengeApp updatedb"]
       restartPolicy: Never
   backoffLimit: 4

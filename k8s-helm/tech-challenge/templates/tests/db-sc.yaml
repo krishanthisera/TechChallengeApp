@@ -1,0 +1,14 @@
+{{- if .Values.db.persistData.enabled }}
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: {{ include "tech-challenge.fullname" . }}-standard-sc
+provisioner: {{ .Values.db.persistData.storageClass.provisioner }}
+parameters: 
+  type: {{ .Values.db.persistData.storageClass.type }}
+reclaimPolicy: {{ .Values.db.persistData.storageClass.reclaimPolicy }}
+allowVolumeExpansion: true
+mountOptions:
+  - debug
+volumeBindingMode: Immediate
+{{- end }}

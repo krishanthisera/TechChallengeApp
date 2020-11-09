@@ -19,11 +19,11 @@ app:
   config:
     enabled: false
     #Optional if you should connect to an external DB other than the DB defined in this value file
-    dbName: {}
-    dbPassword: {} 
-    dbUser: {}
-    bdHost: {}
-    dbPort: {}
+    dbName: ""
+    dbPassword: "" 
+    dbUser: ""
+    bdHost: ""
+    dbPort: ""
 
   autoscaling:
     enabled: false
@@ -35,6 +35,11 @@ app:
   #In order to database seeding to be completed it is required maintain time window (seconds)
   sleep: 120
 
+metricServer:
+  #If the you should configure HPA
+  #Enable metric server which may install the metric server
+  #Ref: 
+  enabled: false
 
 jobs:
   image:
@@ -64,9 +69,18 @@ db:
       memory: 128Mi
   config:
     #Following Values should be base64 encoded
-    dbName: Y2hhbGxlbmdl
-    dbPassword: c2hhZG93Zm94
-    dbUser: c2Vydmlhbg== 
+    dbName: challenge
+    dbPassword: shadowfox
+    dbUser: servian 
+  persistData:
+    enabled: false
+    storageClass:
+      provisioner: kubernetes.io/aws-ebs
+      type: gp2
+      reclaimPolicy: Retain
+    persistenceVolume:
+      accessModes: ReadWriteOnce
+      storage: 1Gi
   autoscaling:
     enabled: false
     minReplicas: 1
@@ -92,14 +106,5 @@ ingress:
   #  - secretName: chart-example-tls
   #    hosts:
   #      - chart-example.local
-
-
-
-autoscaling:
-  enabled: false
-  minReplicas: 1
-  maxReplicas: 100
-  targetCPUUtilizationPercentage: 80
-  # targetMemoryUtilizationPercentage: 80
 
 

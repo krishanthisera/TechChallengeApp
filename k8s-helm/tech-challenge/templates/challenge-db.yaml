@@ -6,14 +6,14 @@ metadata:
     {{- include "tech-challenge.labels" . | nindent 4 }}
 spec:
   {{- if not .Values.db.autoscaling.enabled }}
-  replicas: {{ .Values.app.replicaCount }}
+  replicas: {{ .Values.db.replicaCount }}
   {{- end }}
   selector:
     matchLabels:
       {{- include "tech-challenge.selectorLabels" . | nindent 6 }}
   template:
     metadata:
-      {{- with .Values.app.podAnnotations }}
+      {{- with .Values.db.podAnnotations }}
       annotations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
@@ -27,17 +27,27 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       containers:
-        - name: go
+        - name: postgress
           image: "{{ .Values.db.image.repository }}:{{ .Values.db.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.app.image.pullPolicy }}
           envFrom:
           - secretRef:
               name: {{ include "tech-challenge.fullname" . }}-db-secrets
           ports:
-            - name: http
-              containerPort: 5432
-              protocol: TCP
+          - containerPort: 5432
           resources:
             {{- toYaml .Values.app.resources | nindent 12 }}
+          {{- if .Values.db.persistData.enabled }}
+          volumeMounts:
+          - mountPath: /var/lib/postgresql/data
+            name: postgres-data
+            subPath: postgres
+          {{- end }}
+      {{- if .Values.db.persistData.enabled }}
+      volumes:
+      - name: postgres-data
+        persistentVolumeClaim:
+          claimName: {{ include "tech-challenge.fullname" . }}-pvc
+      {{- end }} 
 
 

@@ -1,20 +1,22 @@
 apiVersion: v1
 kind: Secret
 metadata:
-  name: {{ include "tech-challenge.fullname" . }}-app-secrets
-  annotations:
-    kubernetes.io/service-account.name: "sa-name"
+  name: {{ include "tech-challenge.fullname" . }}-app-config
 type: Opaque
 data:
-  VTT_DBUSER: {{ .Values.app.config.dbUser | default  .Values.db.config.dbUser }}
-  VTT_DBPASSWORD: {{ .Values.app.config.dbPassword | default  .Values.db.config.dbPassword }}
-  VTT_DBNAME: {{ .Values.app.config.dbName | default  .Values.db.config.dbName }}
-  VTT_DBPORT: {{ .Values.app.config.dbPort | default  "NTQzMg==" }}
+  {{- $defDbUser := printf ( .Values.db.config.dbUser | b64enc ) }}
+  {{- $defDbPassword := printf ( .Values.db.config.dbPassword | b64enc ) }}
+  {{- $defDbName := printf ( .Values.db.config.dbName | b64enc ) }}
+  {{- $dbNetPostfix := "db-svc"}}
+  VTT_DBUSER: {{ .Values.app.config.dbUser | b64enc | default $defDbUser }}
+  VTT_DBPASSWORD: {{ .Values.app.config.dbPassword | b64enc | default $defDbPassword }}
+  VTT_DBNAME: {{ .Values.app.config.dbName | b64enc | default $defDbName }}
+  VTT_DBPORT: {{ .Values.app.config.dbPort | b64enc | default  "NTQzMg==" }}
   {{- if .Values.app.config.enabled }}
-  VTT_DBHOST: {{ .Values.app.config.dbHost }}
+  VTT_DBHOST: {{ .Values.app.config.dbHost | b64enc }}
   {{- else }}
-  {{- $releasefullname := include "tech-challenge.fullname" . }}
-  VTT_DBHOST: {{ $releasefullname | b64enc }}LWRiLXN2Yy5zdmMuY2x1c3Rlci5sb2NhbA==s
+  {{- $releaseFullName := include "tech-challenge.fullname" . }}
+  VTT_DBHOST: {{ printf "%s-%s" $releaseFullName $dbNetPostfix | b64enc }}
   {{- end }}
   VTT_LISTENHOST: MC4wLjAuMA==
   VTT_LISTENPORT: ODA=

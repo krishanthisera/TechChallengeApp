@@ -1,0 +1,13 @@
+{{- if .Values.db.persistData.enabled }}
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+   name: {{ include "tech-challenge.fullname" . }}-pvc
+spec:
+  storageClassName: "{{ include "tech-challenge.fullname" . }}-standard-sc"
+  accessModes:
+    - {{ .Values.db.persistData.persistenceVolume.accessModes}}
+  resources:
+    requests:
+      storage: {{ .Values.db.persistData.persistenceVolume.storage }}
+{{- end }}
