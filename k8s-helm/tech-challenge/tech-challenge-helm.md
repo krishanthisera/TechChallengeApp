@@ -8,13 +8,13 @@ Helm chart contains following templates which describes K8s resources,
 <br> The template contains application configuration. The envioremnt variable wich defines here may overide the default enviorement which has been provided during the build.  [TechChallengeApp - Configuration](https://github.com/krishanthisera/TechChallengeApp/blob/master/doc/config.md)
 - [db-secrets.yaml](https://github.com/krishanthisera/TechChallengeApp/blob/master/k8s-helm/tech-challenge/templates/db-secrets.yaml)
 <br> Contains DB credentials
-- [challenge-db.yaml](https://github.com/krishanthisera/TechChallengeApp/blob/master/k8s-helm/tech-challenge/templates/challenge-db.yaml)\
-<br> Manifest file for postgress databse deployement
+- [challenge-db.yaml](https://github.com/krishanthisera/TechChallengeApp/blob/master/k8s-helm/tech-challenge/templates/challenge-db.yaml)
+Manifest file for postgress databse deployement
 - [ingress.yaml](https://github.com/krishanthisera/TechChallengeApp/blob/master/k8s-helm/tech-challenge/templates/ingress.yaml)
 <br> Manifest file for the ingress resource.
-- [seed-job.yaml](https://github.com/krishanthisera/TechChallengeApp/blob/master/k8s-helm/tech-challenge/templates/seed-job.yaml)  
+- [seed-job.yaml](https://github.com/krishanthisera/TechChallengeApp/blob/master/k8s-helm/tech-challenge/templates/seed-job.yaml)
 <br> A kuberentes Job to execute database seeding
-- [challenge-app.yaml](https://github.com/krishanthisera/TechChallengeApp/blob/master/k8s-helm/tech-challenge/templates/challenge-app.yaml)      
+- [challenge-app.yaml](https://github.com/krishanthisera/TechChallengeApp/blob/master/k8s-helm/tech-challenge/templates/challenge-app.yaml)
 <br> Manifest file for the application
 - [services.yaml](https://github.com/krishanthisera/TechChallengeApp/blob/master/k8s-helm/tech-challenge/templates/services.yaml)
 <br> Manifest file for all the Kubernetes service (NodePort, ClusteIP)
@@ -22,7 +22,7 @@ Helm chart contains following templates which describes K8s resources,
 <br> Manifest file for the Persistance volume claim which is to consume by database
 - [hpa.yaml](https://github.com/krishanthisera/TechChallengeApp/blob/master/k8s-helm/tech-challenge/templates/hpa.yaml)
 <br> Manifest file for Horizontal Pod Autoscaler
-- [metric-server.yaml](https://github.com/krishanthisera/TechChallengeApp/blob/master/k8s-helm/tech-challenge/templates/metric-server.yaml)  
+- [metric-server.yaml](https://github.com/krishanthisera/TechChallengeApp/blob/master/k8s-helm/tech-challenge/templates/metric-server.yaml)
 <br> In case HPA has been used, metric server will be deployed using this manifest file
 
 # How to run
