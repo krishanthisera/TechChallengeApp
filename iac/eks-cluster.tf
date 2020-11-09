@@ -1,45 +1,53 @@
 ##################################################################################
-# VARIABLES
+# Render Admin & Developer users list with the structure required by EKS module
 ##################################################################################
-variable "aws_access_key" {}
-variable "aws_secret_key" {}
-variable "k8s_version" {}
-variable "common_tags" {}
+locals {
+  admin_user_map_users = [
+    for admin_user in var.admin_users :
+    {
+      userarn  = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:user/${admin_user}"
+      username = admin_user
+      groups   = ["system:masters"]
+    }
+  ]
+  developer_user_map_users = [
+    for developer_user in var.developer_users :
+    {
+      userarn  = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:user/${developer_user}"
+      username = developer_user
+      groups   = ["${var.name_prefix}-developers"]
+    }
+  ]
+  worker_groups_launch_template = [
+    {
+      override_instance_types = var.asg_instance_types
+      asg_desired_capacity    = var.autoscaling_minimum_size_by_az * length(data.aws_availability_zones.available_azs.zone_ids)
+      asg_min_size            = var.autoscaling_minimum_size_by_az * length(data.aws_availability_zones.available_azs.zone_ids)
+      asg_max_size            = var.autoscaling_maximum_size_by_az * length(data.aws_availability_zones.available_azs.zone_ids)
+      kubelet_extra_args      = "--node-labels=node.kubernetes.io/lifecycle=spot"
+      public_ip               = true
 
-
-##################################################################################
-# DATA
-##################################################################################
-data "aws_eks_cluster" "cluster" {
-  name = module.eks.cluster_id
-}
-
-data "aws_eks_cluster_auth" "cluster" {
-  name = module.eks.cluster_id
-}
-
-##################################################################################
-# EKS
-##################################################################################
-module "eks" {
-  source          = "terraform-aws-modules/eks/aws"
-  cluster_name    = local.cluster_name
-  cluster_version = var.k8s_version
-  subnets         = module.vpc.private_subnets
-  tags            = merge(var.common_tags)
-  vpc_id          = module.vpc.vpc_id
-
-  ##################################################################################
-  # EKS - K8s WORKER GROUPS
-  ##################################################################################
-  worker_groups = [
-    { name                 = "k8s-worker-group-1"
-      instance_type        = "t2.small"
-      asg_desired_capacity = 2
-    additional_security_group_ids = "${aws_security_group.K8s_worker_group_1.id}" },
-    { name                 = "k8s-worker-group-2"
-      instance_type        = "t2.small"
-      asg_desired_capacity = 2
-    additional_security_group_ids = "${aws_security_group.K8s_worker_group_2.id}" }
+    },
   ]
 }
+
+##################################################################################
+# creat EKS cluster
+##################################################################################
+
+module "eks" {
+  source           = "terraform-aws-modules/eks/aws"
+  version          = "12.1.0"
+  cluster_name     = "${var.cluster_name}"
+  cluster_version  = "1.16"
+  write_kubeconfig = false
+
+  subnets = module.vpc.private_subnets
+  vpc_id  = module.vpc.vpc_id
+
+  worker_groups_launch_template = local.worker_groups_launch_template
+
+  # Mapping K8s users
+  map_users = concat(local.admin_user_map_users, local.developer_user_map_users)
+}
+

@@ -28,6 +28,6 @@ resource "aws_iam_policy" "eks_ebs_policy" {
 POLICY
 }
 resource "aws_iam_role_policy_attachment" "eks_ebs_driver" {
-  policy_arn = aws_iam_policy.eks_worknode_ebs_policy.arn
+  policy_arn = aws_iam_policy.eks_ebs_policy.arn
   role       = aws_iam_role.eks_worknode.name
 }

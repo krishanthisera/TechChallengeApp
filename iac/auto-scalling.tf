@@ -1,62 +1,41 @@
-locals {
-  k8s_service_account_namespace = "kube-system"
-  k8s_service_account_name      = "cluster-autoscaler-aws-cluster-autoscaler"
+##################################################################################
+# Get EKS cluster info to configure Kubernetes and Helm providers
+##################################################################################
+
+data "aws_eks_cluster" "cluster" {
+  name = module.eks.cluster_id
+}
+data "aws_eks_cluster_auth" "cluster" {
+  name = module.eks.cluster_id
 }
 
-module "iam_assumable_role_admin" {
-  source                        = "terraform-aws-modules/iam/aws//modules/iam-assumable-role-with-oidc"
-  version                       = "2.14.0"
-  create_role                   = true
-  role_name                     = "cluster-autoscaler"
-  provider_url                  = replace(module.eks.cluster_oidc_issuer_url, "https://", "")
-  role_policy_arns              = [aws_iam_policy.cluster_autoscaler.arn]
-  oidc_fully_qualified_subjects = ["system:serviceaccount:${local.k8s_service_account_namespace}:${local.k8s_service_account_name}"]
+
+##################################################################################
+# Deploy spot termination handler
+##################################################################################
+
+resource "helm_release" "spot_termination_handler" {
+  name       = var.spot_termination_handler_chart_name
+  chart      = var.spot_termination_handler_chart_name
+  repository = var.spot_termination_handler_chart_repo
+  version    = var.spot_termination_handler_chart_version
+  namespace  = var.spot_termination_handler_chart_namespace
 }
+##################################################################################
+# Add spot fleet Autoscaling policy
+##################################################################################
 
-resource "aws_iam_policy" "cluster_autoscaler" {
-  name_prefix = "cluster-autoscaler"
-  description = "EKS cluster-autoscaler policy for cluster ${module.eks.cluster_id}"
-  policy      = data.aws_iam_policy_document.cluster_autoscaler.json
-}
+resource "aws_autoscaling_policy" "eks_autoscaling_policy" {
+  count = length(local.worker_groups_launch_template)
 
-data "aws_iam_policy_document" "cluster_autoscaler" {
-  statement {
-    sid    = "clusterAutoscalerAll"
-    effect = "Allow"
+  name                   = "${module.eks.workers_asg_names[count.index]}-autoscaling-policy"
+  autoscaling_group_name = module.eks.workers_asg_names[count.index]
+  policy_type            = "TargetTrackingScaling"
 
-    actions = [
-      "autoscaling:DescribeAutoScalingGroups",
-      "autoscaling:DescribeAutoScalingInstances",
-      "autoscaling:DescribeLaunchConfigurations",
-      "autoscaling:DescribeTags",
-      "ec2:DescribeLaunchTemplateVersions",
-    ]
-
-    resources = ["*"]
-  }
-
-  statement {
-    sid    = "clusterAutoscalerOwn"
-    effect = "Allow"
-
-    actions = [
-      "autoscaling:SetDesiredCapacity",
-      "autoscaling:TerminateInstanceInAutoScalingGroup",
-      "autoscaling:UpdateAutoScalingGroup",
-    ]
-
-    resources = ["*"]
-
-    condition {
-      test     = "StringEquals"
-      variable = "autoscaling:ResourceTag/kubernetes.io/cluster/${module.eks.cluster_id}"
-      values   = ["owned"]
+  target_tracking_configuration {
+    predefined_metric_specification {
+      predefined_metric_type = "ASGAverageCPUUtilization"
     }
-
-    condition {
-      test     = "StringEquals"
-      variable = "autoscaling:ResourceTag/k8s.io/cluster-autoscaler/enabled"
-      values   = ["true"]
-    }
+    target_value = var.autoscaling_average_cpu
   }
 }
