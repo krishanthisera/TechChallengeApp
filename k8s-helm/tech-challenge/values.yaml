@@ -1,3 +1,6 @@
+##################################################################################
+# APP
+##################################################################################
 app:
   appVersion: 1.0v
   replicaCount: 3
@@ -24,32 +27,18 @@ app:
     dbUser: ""
     bdHost: ""
     dbPort: ""
-
   autoscaling:
     enabled: false
     minReplicas: 1
     maxReplicas: 100
     targetCPUUtilizationPercentage: 80
     # targetMemoryUtilizationPercentage: 80
-  
   #In order to database seeding to be completed it is required maintain time window (seconds)
   sleep: 120
 
-metricServer:
-  #If the you should configure HPA
-  #Enable metric server which may install the metric server
-  #Ref: 
-  enabled: false
-
-jobs:
-  image:
-    repository: krishees/techchallengeapp
-    tag: latest
-    pullPolicy: IfNotPresent
-  #In order to start the DB seeding, db deployement should be completed.
-  #Hence it is required maintain a time window (seconds)
-  sleep: 160
-
+##################################################################################
+# Database
+##################################################################################
 db:
   replicaCount: 1
   image:
@@ -88,12 +77,37 @@ db:
     targetCPUUtilizationPercentage: 80
     # targetMemoryUtilizationPercentage: 80
 
+##################################################################################
+# K8s Jobs
+##################################################################################
+jobs:
+  image:
+    repository: krishees/techchallengeapp
+    tag: latest
+    pullPolicy: IfNotPresent
+  #In order to start the DB seeding, db deployement should be completed.
+  #Hence it is required maintain a time window (seconds)
+  sleep: 160
+
+##################################################################################
+# Metric Server
+##################################################################################
+metricServer:
+  #If the you should configure HPA
+  #Enable metric server which may install the metric server
+  #Ref: 
+  enabled: false
+
+##################################################################################
+# Node Port Service
+##################################################################################
 nodePort:
   enabled: true
   port: 30080
 
-
-
+##################################################################################
+# K8s Ingress
+##################################################################################
 ingress:
   enabled: false
   annotations: {}

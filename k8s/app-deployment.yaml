@@ -1,3 +1,22 @@
+---
+#APP configs
+apiVersion: v1
+kind: Secret
+metadata:
+  name: app-config
+  namespace: challenge
+type: Opaque
+data:
+  VTT_DBUSER: c2Vydmlhbg==
+  VTT_DBPASSWORD: c2hhZG93Zm94 
+  VTT_DBNAME: Y2hhbGxlbmdl
+  VTT_DBPORT: NTQzMg==
+  VTT_DBHOST: ZGItc2VydmljZS5jaGFsbGVuZ2Uuc3ZjLmNsdXN0ZXIubG9jYWw=
+  VTT_LISTENHOST: MC4wLjAuMA==
+  VTT_LISTENPORT: ODA=
+
+
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -19,6 +38,9 @@ spec:
       containers:
       - name: go
         image: krishees/techchallengeapp
+        envFrom:
+        - secretRef:
+            name: app-config
         command: ["/bin/sh"]
         args: ["-c", "echo 'Sleep time initiated - waiting on db to propergate'; sleep 120; ./TechChallengeApp serve"]
         ports:
