@@ -27,7 +27,7 @@ pipeline {
         stage('Docker Publish') {
             steps {
                 container('docker') {
-                    withDockerRegistry([credentialsId: "${DOCKER_REGISTRY_CREDENTIAL}"]) {
+                    withDockerRegistry([credentialsId: "${DOCKER_REGISTRY_CREDENTIAL}", url: "https://index.docker.io/v1/"]) {
                         sh "docker push ${DOCKER_REGISTRY}:${BUILD_NUMBER}"
                     }
                 }
