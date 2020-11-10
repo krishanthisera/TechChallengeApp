@@ -10,10 +10,13 @@ spec:
   containers:
     - name: docker
       image: docker:19.03
+      securityContext:
+          #Not recommended - Demonstration purposes only
+          allowPrivilegeEscalation: true
+          runAsUser: 0
       command:
         - cat
       tty: true
-      privileged: true
       volumeMounts:
         - name: dockersock
           mountPath: /var/run/docker.sock
