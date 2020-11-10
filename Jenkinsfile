@@ -35,10 +35,7 @@ pipeline {
         stage('Kubernetes Deploy') {
             steps {
                 container('helm') {
-                    sh "helm upgrade --install --force 
-                     --set app.image.repository=${DOCKER_REGISTRY} 
-                     --set app.image.tag=${BUILD_NUMBER}
-                     ${RELEASE_NAME} ./k8s-helm/tech-challenge"
+                    sh "helm upgrade --install --force --set app.image.repository=${DOCKER_REGISTRY} --set app.image.tag=${BUILD_NUMBER} ${RELEASE_NAME} ./k8s-helm/tech-challenge"
                 }
             }
         }
