@@ -1,6 +1,6 @@
 # Tech-Challenge-Helm
 The **recommended** way of the deploying the application
-[![N|Solid](https://www.katacoda.com/sylus/courses/kubernetes-cncf/module-1/assets/helm-logo.png)](https://nodesource.com/products/nsolid)
+![Helm](https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQyA_iUoPksLXi6PmNkCHm_frDELgYbIVHmb0VADyoYRPl1NhP2QmBE_Hjv1CgCPm2AV6ztTxfa6Byi7mGHNOAPlBAkhoxwU4iUmz5TReI&usqp=CAU&ec=45722099)](https://nodesource.com/products/nsolid)
 
 Using the Helm Charts provided, the application can be deployed independently on any Kubernetes enviorment. 
 Helm chart contains following templates which describes K8s resources,
@@ -26,7 +26,12 @@ Manifest file for postgress databse deployement
 <br> In case HPA has been used, metric server will be deployed using this manifest file
 
 # How to run
+
 In case if you should execute these Helm chart locally,
+Verify whether [Helm is installed](https://helm.sh/docs/intro/install/) in your computer,
+```sh
+$ terraform version
+```
 ```sh
 $ helm install <release-name> <path to the chart>
 $ helm ls
