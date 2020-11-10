@@ -10,12 +10,13 @@ pipeline {
             yamlFile 'jenkinsBuild.yaml'
         }
     }
-    stage("Checkout Source") {
-      steps {
-        git credentialsId: 'git-fcc', url: 'https://github.com/krishanthisera/TechChallengeApp.git'
-      }
-    }
+    
     stages {
+        stage("Checkout Source") {
+            steps {
+                git credentialsId: 'git-fcc', url: 'https://github.com/krishanthisera/TechChallengeApp.git'
+             }
+        }
         stage('Docker Build') {
             steps {
                 container('docker') {
