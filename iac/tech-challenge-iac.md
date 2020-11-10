@@ -22,7 +22,7 @@ An Elastic Kubernetes Cluster will be provisioned as the result of this executio
 |[outputs.tf](https://github.com/krishanthisera/TechChallengeApp/blob/master/iac/outputs.tf)|Describes/templates Terraform output data|
 
 ## How to Run
-Verify whether [terraform is installed](https://learn.hashicorp.com/tutorials/terraform/install-cli) in your computer,
+Verify whether [Terraform is installed](https://learn.hashicorp.com/tutorials/terraform/install-cli) in your computer,
 ```sh
 $ terraform version
 ```

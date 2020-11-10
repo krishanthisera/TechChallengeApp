@@ -1,38 +1,28 @@
 # Tech-Challenge-Helm
 
+The **recommended** way of deploying the application
+
+
 ![Helm](https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQyA_iUoPksLXi6PmNkCHm_frDELgYbIVHmb0VADyoYRPl1NhP2QmBE_Hjv1CgCPm2AV6ztTxfa6Byi7mGHNOAPlBAkhoxwU4iUmz5TReI&usqp=CAU&ec=45722099)
 
-<br>The **recommended** way of the deploying the application.
-<br>Using the Helm Charts provided, the application can be deployed independently on any Kubernetes enviorment. 
-Helm chart contains following templates which describes K8s resources,
-- [app-config.yaml](https://github.com/krishanthisera/TechChallengeApp/blob/master/k8s-helm/tech-challenge/templates/app-config.yaml)
-<br> The template contains application configuration. The envioremnt variable wich defines here may overide the default enviorement which has been provided during the build.  [TechChallengeApp - Configuration](https://github.com/krishanthisera/TechChallengeApp/blob/master/doc/config.md)
-- [db-secrets.yaml](https://github.com/krishanthisera/TechChallengeApp/blob/master/k8s-helm/tech-challenge/templates/db-secrets.yaml)
-<br> Contains DB credentials
-- [challenge-db.yaml](https://github.com/krishanthisera/TechChallengeApp/blob/master/k8s-helm/tech-challenge/templates/challenge-db.yaml)
-Manifest file for postgress databse deployement
-- [ingress.yaml](https://github.com/krishanthisera/TechChallengeApp/blob/master/k8s-helm/tech-challenge/templates/ingress.yaml)
-<br> Manifest file for the ingress resource.
-- [seed-job.yaml](https://github.com/krishanthisera/TechChallengeApp/blob/master/k8s-helm/tech-challenge/templates/seed-job.yaml)
-<br> A kuberentes Job to execute database seeding
-- [challenge-app.yaml](https://github.com/krishanthisera/TechChallengeApp/blob/master/k8s-helm/tech-challenge/templates/challenge-app.yaml)
-<br> Manifest file for the application
-- [services.yaml](https://github.com/krishanthisera/TechChallengeApp/blob/master/k8s-helm/tech-challenge/templates/services.yaml)
-<br> Manifest file for all the Kubernetes service (NodePort, ClusteIP)
-- [db-pvc.yaml](https://github.com/krishanthisera/TechChallengeApp/blob/master/k8s-helm/tech-challenge/templates/db-pvc.yaml) 
-<br> Manifest file for the Persistance volume claim which is to consume by database
-- [hpa.yaml](https://github.com/krishanthisera/TechChallengeApp/blob/master/k8s-helm/tech-challenge/templates/hpa.yaml)
-<br> Manifest file for Horizontal Pod Autoscaler
-- [metric-server.yaml](https://github.com/krishanthisera/TechChallengeApp/blob/master/k8s-helm/tech-challenge/templates/metric-server.yaml)
-<br> In case HPA has been used, metric server will be deployed using this manifest file
+
+Using the Helm Charts provided, the application can be deployed independently on any Kubernetes environment. 
+Helm chart contains the following templates which describe K8s resources:
+| Template | Description |
+| ------ | ------ |
+|[app-config.yaml](https://github.com/krishanthisera/TechChallengeApp/blob/master/k8s-helm/tech-challenge/templates/app-config.yaml)| The template contains application configuration. The environment variables which define <br>here may override the default environment variables which has been provided during the build.  [TechChallengeApp - Configuration](https://github.com/krishanthisera/TechChallengeApp/blob/master/doc/config.md) |
+| [db-secrets.yaml](https://github.com/krishanthisera/TechChallengeApp/blob/master/k8s-helm/tech-challenge/templates/db-secrets.yaml) | Contains DB credentials. |
+| [challenge-db.yaml](https://github.com/krishanthisera/TechChallengeApp/blob/master/k8s-helm/tech-challenge/templates/challenge-db.yaml) | Manifest file for postgres database deployment. |
+| [ingress.yaml](https://github.com/krishanthisera/TechChallengeApp/blob/master/k8s-helm/tech-challenge/templates/ingress.yaml) | Manifest file for the ingress resource. |
+| [seed-job.yaml](https://github.com/krishanthisera/TechChallengeApp/blob/master/k8s-helm/tech-challenge/templates/seed-job.yaml) | A Kubernetes Job to execute database seeding. |
+| [challenge-app.yaml](https://github.com/krishanthisera/TechChallengeApp/blob/master/k8s-helm/tech-challenge/templates/challenge-app.yaml) |  Manifest file for the application. |
+| [services.yaml](https://github.com/krishanthisera/TechChallengeApp/blob/master/k8s-helm/tech-challenge/templates/services.yaml) | Manifest file for all the Kubernetes service (NodePort, ClusteIP). |
+| [db-pvc.yaml](https://github.com/krishanthisera/TechChallengeApp/blob/master/k8s-helm/tech-challenge/templates/db-pvc.yaml) | Manifest file for the Persistence Volume Claim that will be consumed by a database. |
+| [hpa.yaml](https://github.com/krishanthisera/TechChallengeApp/blob/master/k8s-helm/tech-challenge/templates/hpa.yaml) | Manifest file for Horizontal Pod Autoscaler. |
+| [metric-server.yaml](https://github.com/krishanthisera/TechChallengeApp/blob/master/k8s-helm/tech-challenge/templates/metric-server.yaml) | If the HPA has been used, the metric server will be deployed using this manifest file. |
 
 # How to run
-
 In case if you should execute these Helm chart locally,
-Verify whether [Helm is installed](https://helm.sh/docs/intro/install/) in your computer,
-```sh
-$ terraform version
-```
 ```sh
 $ helm install <release-name> <path to the chart>
 $ helm ls
@@ -42,7 +32,7 @@ To unistall the release
 $ helm uninstall <release-name>
 ```
 # Helm Values
-You may customise the deployment of the application by using the [value.yaml](https://github.com/krishanthisera/TechChallengeApp/blob/master/k8s-helm/tech-challenge/values.yaml) file 
+You may customise the deployment of the application using the [value.yaml](https://github.com/krishanthisera/TechChallengeApp/blob/master/k8s-helm/tech-challenge/values.yaml) file. 
 The values in the files are straightforward, especially if you should use an external database, 
 ```sh
 db:
@@ -50,12 +40,12 @@ db:
         enabled: true
 ```
 and the database connection deatils must be provided.
-finally release can be upgraded.
+Finally release can be upgraded.
 
 ```sh
 $ helm upgrade <release-name>
 ```
-Application and Database PODs can be configured to autoscale by enabeling,
+Application and Database PODs can be configured to autoscale by enabling,
 ```sh
 autoscaling:
     enabled: true
@@ -65,15 +55,15 @@ More importantly, the [metric server](https://github.com/kubernetes-sigs/metrics
 metricServer:
   enabled: false
 ```
-A **NodePort** configuration can be used to access the application instead for the ingress. (Port range 30000-32767)
+A **NodePort** configuration can be applied to access the application instead of the ingress. (Port range 30000-32767)
 
-**Sleep timers** has been used to maintain the flow of the execution. For example, until the seeding complete the application won't be accessable.
+**Sleep timers** have been used to maintain the flow of the execution. For example, the application won’t be accessible until the seeding complete.
 ```sh
 jobs:
   ...
   sleep: 160
  ```
-**Data persistency** of the Database can be achived by,
+**Data persistency** of the Database can be achieved by,
 ```sh
 db:
   ...
@@ -87,6 +77,6 @@ db:
       accessModes: ReadWriteOnce
       storage: 1Gi
 ```
-The [db-sc.yaml](https://github.com/krishanthisera/TechChallengeApp/blob/master/k8s-helm/tech-challenge/templates/db-sc.yaml) creates a storage class using the configuration under `storageClass: ` and the persistence volume will be create the by refering configuration under `persistenceVolume:`.
+The [db-sc.yaml](https://github.com/krishanthisera/TechChallengeApp/blob/master/k8s-helm/tech-challenge/templates/db-sc.yaml) creates a storage class using the configuration under `storageClass: ` and the Persistence Volume will be created by referring configuration under `persistenceVolume:`.
 
-_Note that, in a scenatio where an automatic storage provisioner is unavailable to maintain the data persistency user may manually provision the Persistence Volumes (PV)._
+_Note that, in a scenario where an automatic storage provisioner is unavailable to maintain the data persistence, the user may manually provision the Persistence Volume Claim (PVC)._
