@@ -11,6 +11,7 @@ spec:
     - name: docker
       image: docker:19.03
       securityContext:
+          #Not recommended - Demonstration purposes only
           allowPrivilegeEscalation: true
           runAsUser: 0
       command:
