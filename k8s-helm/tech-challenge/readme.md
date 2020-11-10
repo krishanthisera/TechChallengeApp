@@ -23,6 +23,11 @@ Helm chart contains the following templates which describe K8s resources:
 
 # How to run
 In case if you should execute these Helm chart locally,
+Verify whether [Helm is installed](https://learn.hashicorp.com/tutorials/terraform/install-cli) in your computer,
+```sh
+$ helm version
+```
+Install the release using the Helm chart,
 ```sh
 $ helm install <release-name> <path to the chart>
 $ helm ls
