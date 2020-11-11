@@ -95,7 +95,6 @@ jobs:
 metricServer:
   #If the you should configure HPA
   #Enable metric server which may install the metric server
-  #Ref: 
   enabled: false
 
 ##################################################################################
@@ -104,6 +103,12 @@ metricServer:
 nodePort:
   enabled: true
   port: 30080
+
+##################################################################################
+# Load Balance Service
+##################################################################################
+loadBalancer:
+  enabled: true
 
 ##################################################################################
 # K8s Ingress

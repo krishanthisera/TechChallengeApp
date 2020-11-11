@@ -36,7 +36,7 @@ $ terraform version
 2. Create terraform workspace and initialise terraform
       ```sh
         $ # cd into the Terraform directory 
-        $ terraform workspace new development
+        $ terraform workspace new challenge
         $ terraform init 
       ```
       It is recomended to maintain a centrlised directory to mange `.tfstate` file where Terraform stores its status of the deployment
@@ -48,7 +48,7 @@ $ terraform version
 4. Apply the changes 
      ```sh
         # cd into the Terraform directory 
-        $ terraform apply development.tfplan
+        $ terraform apply plan.tfplan
       ```
 5. Configure `kubectl`
      ```sh

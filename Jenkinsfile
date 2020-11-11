@@ -10,7 +10,6 @@ pipeline {
             yamlFile 'jenkins-build.yaml'
         }
     }
-    
     stages {
         stage("Checkout Source") {
             steps {
@@ -24,7 +23,7 @@ pipeline {
                 }
             }
         }
-        stage('Docker Publish') {
+        stage('Image Shipping') {
             steps {
                 container('docker') {
                     withDockerRegistry([credentialsId: "${DOCKER_REGISTRY_CREDENTIAL}", url: "https://index.docker.io/v1/"]) {
