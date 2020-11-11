@@ -25,7 +25,7 @@ spec:
         value: jenkins-agent.operations:50000
     - name: helm
       image: lachlanevenson/k8s-helm:v3.1.1
-      tty: trues
+      tty: true
       env:
       - name: JENKINS_URL
         value: http://jenkins.operations:8080
