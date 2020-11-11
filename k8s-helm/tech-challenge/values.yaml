@@ -34,12 +34,13 @@ app:
     targetCPUUtilizationPercentage: 80
     # targetMemoryUtilizationPercentage: 80
   #In order to database seeding to be completed it is required maintain time window (seconds)
-  sleep: 120
+  sleep: 160
 
 ##################################################################################
 # Database
 ##################################################################################
 db:
+  enabled: true #If the DB should disable, you may configure the external db configuration at the app
   replicaCount: 1
   image:
     repository: postgres
@@ -81,13 +82,14 @@ db:
 # K8s Jobs
 ##################################################################################
 jobs:
+  enabled: false #It recommended to disable this after the first release
   image:
     repository: krishees/techchallengeapp
     tag: latest
     pullPolicy: IfNotPresent
   #In order to start the DB seeding, db deployement should be completed.
   #Hence it is required maintain a time window (seconds)
-  sleep: 160
+  sleep: 120
 
 ##################################################################################
 # Metric Server
@@ -101,8 +103,8 @@ metricServer:
 # Node Port Service
 ##################################################################################
 nodePort:
-  enabled: true
-  port: 30080
+  enabled: false
+  port: 30080 
 
 ##################################################################################
 # Load Balance Service

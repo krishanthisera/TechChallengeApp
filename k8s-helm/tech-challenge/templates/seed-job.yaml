@@ -1,3 +1,4 @@
+{{- if .Values.jobs.enabled }}
 apiVersion: batch/v1
 kind: Job
 metadata:
@@ -15,3 +16,4 @@ spec:
         args: ["-c", "echo 'Sleep time initiated - waiting on db to install'; sleep {{ .Values.jobs.sleep }}; ./TechChallengeApp updatedb"]
       restartPolicy: Never
   backoffLimit: 4
+{{- end}}

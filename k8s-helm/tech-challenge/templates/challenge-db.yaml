@@ -1,3 +1,4 @@
+{{- if .Values.db.enabled }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -49,5 +50,5 @@ spec:
         persistentVolumeClaim:
           claimName: {{ include "tech-challenge.fullname" . }}-pvc
       {{- end }} 
-
+{{- end}}
 

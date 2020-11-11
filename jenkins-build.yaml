@@ -14,8 +14,6 @@ spec:
           #Not recommended - Demonstration purposes only
           allowPrivilegeEscalation: true
           runAsUser: 0
-      command:
-        - cat
       tty: true
       volumeMounts:
         - name: dockersock
@@ -27,9 +25,7 @@ spec:
         value: jenkins-agent.operations:50000
     - name: helm
       image: lachlanevenson/k8s-helm:v3.1.1
-      command:
-        - cat
-      tty: true
+      tty: trues
       env:
       - name: JENKINS_URL
         value: http://jenkins.operations:8080

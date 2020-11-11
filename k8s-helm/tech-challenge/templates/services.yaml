@@ -49,9 +49,9 @@ spec:
   selector:
     {{- include "tech-challenge.selectorLabels" . | nindent 4 }}
     app: challenge-app
-  {{- end }}
+{{- end }}
 ---
-{{- if .Values.loadBalancer.enabled -}}
+{{- if .Values.loadBalancer.enabled }}
 apiVersion: v1
 kind: Service
 metadata:
@@ -68,4 +68,4 @@ spec:
   selector:
     {{- include "tech-challenge.selectorLabels" . | nindent 4 }}
     app: challenge-app
-  {{- end }}
+{{- end }}

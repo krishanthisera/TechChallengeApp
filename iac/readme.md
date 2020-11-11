@@ -3,20 +3,20 @@
 
 An Elastic Kubernetes Cluster will be provisioned as the result of this execution.
 
-## Primary Terraform modules 
+## Primary Terraform Modules 
 1. [EKS Module](https://github.com/terraform-aws-modules/terraform-aws-eks) 
 2. [VPC Module](https://github.com/terraform-aws-modules/terraform-aws-vpc)
 ## File Structure
 | File | Description |
 | ------ | ------ |
 | [provider.tf](https://github.com/krishanthisera/TechChallengeApp/blob/master/iac/provider.tf) | Describes Terraform Providers |
-| [eks-cluster.tf](https://github.com/krishanthisera/TechChallengeApp/blob/master/iac/eks-cluster.tf) | Describes the EKS cluster and it's Worker Nodes |
+| [eks-cluster.tf](https://github.com/krishanthisera/TechChallengeApp/blob/master/iac/eks-cluster.tf) | Describes the EKS cluster and its Worker Nodes |
 | [vpc.tf](https://github.com/krishanthisera/TechChallengeApp/blob/master/iac/vpc.tf) | Describes AWS VPCs |
-| [auto-scalling.tf](https://github.com/krishanthisera/TechChallengeApp/blob/master/iac/auto-scalling.tf) | Describes resources, including policies to facilitate autoscalling |
-| [ebs-volumes.tf](https://github.com/krishanthisera/TechChallengeApp/blob/master/iac/ebs-volumes.tf) | Descibe AWS EBS Volume policies to facilitate the data persistency |
+| [auto-scaling.tf](https://github.com/krishanthisera/TechChallengeApp/blob/master/iac/auto-scaling.tf) | Describes resources, including the policies to facilitate autoscaling |
+| [ebs-volumes.tf](https://github.com/krishanthisera/TechChallengeApp/blob/master/iac/ebs-volumes.tf) | Describe AWS EBS Volume policies to facilitate the data persistency |
 | [iam.tf](https://github.com/krishanthisera/TechChallengeApp/blob/master/iac/iam.tf) | Describe essential IAM roles |
 | [rbac.tf](https://github.com/krishanthisera/TechChallengeApp/blob/master/iac/rbac.tf) | An optional config to create EKS role  |
-| [load-balancer.tf_exculde](https://github.com/krishanthisera/TechChallengeApp/blob/master/iac/load-balancer.tf_exculde)| An optional configuration if it required provision K8s ingress _(required to remove "exclued")_|
+| [load-balancer.tf_exclude](https://github.com/krishanthisera/TechChallengeApp/blob/master/iac/load-balancer.tf_exclude)| An optional configuration if it requires provision K8s ingress _(required to remove "exclude")_|
 | [variables.tf](https://github.com/krishanthisera/TechChallengeApp/blob/master/iac/variables.tf)| All the Terraform variables are defined here|
 |[terraform.tfvars](https://github.com/krishanthisera/TechChallengeApp/blob/master/iac/terraform.tfvars)|Holds values for the variables|
 |[outputs.tf](https://github.com/krishanthisera/TechChallengeApp/blob/master/iac/outputs.tf)|Describes/templates Terraform output data|
@@ -26,20 +26,20 @@ Verify whether [Terraform is installed](https://learn.hashicorp.com/tutorials/te
 ```sh
 $ terraform version
 ```
-1. Define the all the required vaiable using [terraform.tfvars](https://github.com/krishanthisera/TechChallengeApp/blob/master/iac/terraform.tfvars) <br> It is reccomended that  **AWS_ACCESS_KEY_ID** and **AWS_SECRET_ACCESS_KEY** provide as enviorement variables,
+1. Define all the required vaiable using [terraform.tfvars](https://github.com/krishanthisera/TechChallengeApp/blob/master/iac/terraform.tfvars) <br> It is reccomended that  **AWS_ACCESS_KEY_ID** and **AWS_SECRET_ACCESS_KEY** provide as enviorement variables,
       ```sh
         $ export AWS_ACCESS_KEY_ID=<YOUR_ACCESS_KEY>
         $ export AWS_SECRET_ACCESS_KEY=<YOUR_SECRET_KEY>
       ```
       Or even better to use [HashiCorp Vault](https://www.hashicorp.com/resources/managing-vault-with-terraform)
-      optionally ingress can be enabled by using allowing [load-balancer.tf_exculde](https://github.com/krishanthisera/TechChallengeApp/blob/master/iac/load-balancer.tf_exculde) to execute.
+      optionally Ingress can be enabled by allowing [load-balancer.tf_exclude](https://github.com/krishanthisera/TechChallengeApp/blob/master/iac/load-balancer.tf_exclude) to execute.
 2. Create terraform workspace and initialise terraform
       ```sh
         $ # cd into the Terraform directory 
-        $ terraform workspace new challenge
+        $ terraform workspace new development
         $ terraform init 
       ```
-      It is recomended to maintain a centrlised directory to mange `.tfstate` file where Terraform stores its status of the deployment
+      It is recommended to maintain a centralised directory to manage `.tfstate` file where Terraform stores its status of the deployment
 3. Create the Terraform plan
      ```sh
         # cd into the Terraform directory 
@@ -48,7 +48,7 @@ $ terraform version
 4. Apply the changes 
      ```sh
         # cd into the Terraform directory 
-        $ terraform apply plan.tfplan
+        $ terraform apply development.tfplan
       ```
 5. Configure `kubectl`
      ```sh
@@ -60,4 +60,4 @@ $ terraform version
         # cd into the Terraform directory 
         $ kubectl cluster-info
       ```  
-_Note that, to ingress to be installed it is required configure AWS Route53 in this case. It is assumed that base domain has already been configureds_
+_Note that, for the Ingress to be installed, it is required to configure AWS Route53 in this case. It is assumed that the base domain has already been configured_
