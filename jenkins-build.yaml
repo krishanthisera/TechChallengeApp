@@ -20,11 +20,21 @@ spec:
       volumeMounts:
         - name: dockersock
           mountPath: /var/run/docker.sock
+      env:
+      - name: JENKINS_URL
+        value: http://jenkins.operations:8080
+      - name: JENKINS_TUNNEL
+        value: jenkins-agent.operations:50000
     - name: helm
       image: lachlanevenson/k8s-helm:v3.1.1
       command:
         - cat
       tty: true
+      env:
+      - name: JENKINS_URL
+        value: http://jenkins.operations:8080
+      - name: JENKINS_TUNNEL
+        value: jenkins-agent.operations:50000
   volumes:
     - name: dockersock
       hostPath:
