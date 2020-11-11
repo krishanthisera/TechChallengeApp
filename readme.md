@@ -67,10 +67,9 @@ Information about the assessment is available in the [assessment.md file](ASSESS
 If you've found an issue with the application, the documentation, or anything else, we are happy to take contributions. Please raise an issue in the [github repository](https://github.com/Servian/TechChallengeApp/issues) and read through the contribution rules found the [CONTRIBUTING.md](CONTRIBUTING.md) file for the details.
 
 # Solution Implementation
-Following section summerrise the solution implementation.
-Follwoing list of file were introduced/manipulted during the implementation process (to the master branch). 
+The following section summarises the solution architecture and instruction to deploy the application. The following list of the files was introduced/manipulated during the implementation process (to the master branch).
 ```sh
-├── Dockerfile <br>
+├── Dockerfile 
 ├── Jenkinsfile
 ├── iac
 │   ├── auto-scalling.tf
@@ -123,14 +122,14 @@ Follwoing list of file were introduced/manipulted during the implementation proc
 ├── readme.md
 ```
 ## Terminology
-Following technologies has been used to finalise entire solution.
+Following technologies has been associated to finalise the solution.
 
 ![stack](https://www.hatboysoftware.com/blog/images/docker-kubernetes-helm-terraform.png)
 | Technology | Purpose | Reference |
 | ------ | ------ | ------ |
 | Docker | To containerise the application | [Dockerfile](https://github.com/krishanthisera/TechChallengeApp/blob/master/Dockerfile) |
-| Kubernetes | To orchatrater the containers | [k8s-helm/tech-challenge](https://github.com/krishanthisera/TechChallengeApp/tree/master/k8s-helm/tech-challenge) <br> [k8s](https://github.com/krishanthisera/TechChallengeApp/tree/master/k8s)|
-| Helm | To manage the alication release to Kubernetes| [k8s-helm/tech-challenge](https://github.com/krishanthisera/TechChallengeApp/tree/master/k8s-helm/tech-challenge) |
+| Kubernetes | To orchestrate the containers | [k8s-helm/tech-challenge](https://github.com/krishanthisera/TechChallengeApp/tree/master/k8s-helm/tech-challenge) <br> [k8s](https://github.com/krishanthisera/TechChallengeApp/tree/master/k8s)|
+| Helm | To manage the application releases | [k8s-helm/tech-challenge](https://github.com/krishanthisera/TechChallengeApp/tree/master/k8s-helm/tech-challenge) |
 |Terraform| As the tool of IaC (Infructure as Code) | [iac](https://github.com/krishanthisera/TechChallengeApp/tree/master/iac)|
 | Jenkins | To implement the CI Pipeline | [Jenkinsfile](https://github.com/krishanthisera/TechChallengeApp/blob/master/Jenkinsfile) <br> [jenkins-build.yaml](https://github.com/krishanthisera/TechChallengeApp/blob/master/jenkins-build.yaml)|
 
@@ -138,27 +137,28 @@ Following technologies has been used to finalise entire solution.
 
 ![Kubernetes](https://i.ibb.co/kHCFRLN/Servian-infra.png)
 
-## Networking and loadbalacing
+## Networking and Load Balacing
 As shown above the Ingress component may or may not be presented on the Kubernetes enviorment depending on the installation.
 
-The Application and the Database is runing as two seperate deployments. Envethough the connection between those two pods were not explisitly defined in the diagram. A ClusterIP service has been used _(Please reffer [k8s/k8s-services.yaml](https://github.com/krishanthisera/TechChallengeApp/blob/master/k8s/k8s-services.yaml) and [k8s-helm/tech-challenge/templates/services.yaml](https://github.com/krishanthisera/TechChallengeApp/blob/master/k8s-helm/tech-challenge/templates/services.yaml))_.
+As shown above, the Ingress components may or may not be presented on the Kubernetes environment depending on the installation.
+The Application and the Database are running as two separate deployments. Even though the connection between those two pods were not explicitly defined in the diagram. A ClusterIP service has been used  _(Please refer [k8s/k8s-services.yaml](https://github.com/krishanthisera/TechChallengeApp/blob/master/k8s/k8s-services.yaml) and [k8s-helm/tech-challenge/templates/services.yaml](https://github.com/krishanthisera/TechChallengeApp/blob/master/k8s-helm/tech-challenge/templates/services.yaml))_.
 
-In a scenario where there is no such a requirement for an ingress to be deployed, a NodePort service can be enable by using the Helm value file or at setting the parameter at the Helm installation
+In a scenario where there is no such a requirement for an ingress to be deployed, a NodePort service can be enabled by using the Helm value file or at setting the parameter at the Helm installation
 ```sh
 $ helm upgrade --install --force --set nodePort.enabled=true --set nodePort.port=<NODE_PORT> <RELEASE_NAME_ ./k8s-helm/tech-challenge
 ```
-or the easiste way is to expose the deployment as the Kubernetes LoadBancer service. This can be enable by stting `--set loadBalancer.enabled=true`
+Optionally, as the easiest way os exposing the deployment is as a Kubernetes LoadBancer service. This can be enable by setting `--set loadBalancer.enabled=true`
 or after the deployement,
 ```sh
 $ kubectl expose deploy servian-tech-challenge-app --type=LoadBalancer --port=80 --target-port=80
 ```
-To retrieve the exteral IP which was configured as a result of the load blancer service
+To retrieve the external IP which was configured as a result of the Kuberenetes Load Balancer service
 ```sh
 $ kubectl get services  --output jsonpath="{.items[*].status.loadBalancer.ingress[*].hostname}{'\n'}"
 ```
-_Note that, it has been assumed that the application has been deployed to the default namespace_
+_Note that, it has been assumed that the application has been deployed on the default namespace_
 ### Jobs
-To update the Databes with seed data a Kubernetes Job has been used. Same image which has been used in the application container has been used by overiding its Entrypoint.
+To update the Databases with seed data, a Kubernetes Job has been used. The same image which has been used in the application container has been used by overriding the Entrypoint.
 ```sh
 # Kubernetes Job
 ...
@@ -171,15 +171,15 @@ template:
         args: ["-c", "echo 'Sleep time initiated - waiting on db to install'; sleep 180; ./TechChallengeApp updatedb"]
         ...
 ```
-There are couple of sleep timers has been used to avoid any complication.
+There are a couple of sleep timers has been used to avoid any complication.
 ### How to Run
-User can either deploy the application manually or by using Jenkins. 
+The application can be deployed either manually or by using the Jenkins pipeline. 
 #### Manual Deployment
 Dependencies:
 1. Terraform
 2. kubectl
 3. Helm
-Verify whether abouve componenets are installed in the system,
+<br> Verify whether abouve componenets are installed in the system,
     ```sh
     $ # terraform
     $ terraform version
@@ -193,13 +193,13 @@ Verify whether abouve componenets are installed in the system,
     version.BuildInfo{Version:"v3.4.0", GitCommit:"7090a89efc8a18f3d8178bf47d2462450349a004", GitTreeState:"dirty", GoVersion:"go1.15.3"}
     ```
 ##### Deploy EKS cluster using Terraform
-1. Define the all the required vaiable using [terraform.tfvars](https://github.com/krishanthisera/TechChallengeApp/blob/master/iac/terraform.tfvars) <br> It is reccomended that  **AWS_ACCESS_KEY_ID** and **AWS_SECRET_ACCESS_KEY** provide as enviorement variables,
+1. Define all the required vaiables using [terraform.tfvars](https://github.com/krishanthisera/TechChallengeApp/blob/master/iac/terraform.tfvars) <br> It is reccomended that  **AWS_ACCESS_KEY_ID** and **AWS_SECRET_ACCESS_KEY** provide as enviorement variables,
       ```sh
         $ export AWS_ACCESS_KEY_ID=<YOUR_ACCESS_KEY>
         $ export AWS_SECRET_ACCESS_KEY=<YOUR_SECRET_KEY>
       ```
       Or even better to use [HashiCorp Vault](https://www.hashicorp.com/resources/managing-vault-with-terraform)
-      optionally ingress can be enabled by using allowing [load-balancer.tf_exculde](https://github.com/krishanthisera/TechChallengeApp/blob/master/iac/load-balancer.tf_exculde) to execute.
+      <br> optionally ingress can be enabled by using allowing [load-balancer.tf_exculde](https://github.com/krishanthisera/TechChallengeApp/blob/master/iac/load-balancer.tf_exculde) to execute.
 2. Create terraform workspace and initialise terraform
       ```sh
         $ # cd into the Terraform directory 
@@ -227,8 +227,8 @@ Verify whether abouve componenets are installed in the system,
         # cd into the Terraform directory 
         $ kubectl cluster-info
       ```  
-##### Deploy Application using Hlem
-- Install the release using the Helm chart,
+##### Deploy Application using Helm
+- Install the application using the Helm chart,
    ```sh
       $ helm install <release-name> <path to the chart>
       $ helm ls
@@ -248,23 +248,23 @@ Verify whether abouve componenets are installed in the system,
     helm uninstall <release-name>
    ```
 ##### Helm Values
-Helm charts default values can be seen on the [Helm vlaue file](). These values can be overide by `--set <key>=<value>` directive
+Helm chart's default values are available on the [tech-challenge/values.yaml](https://github.com/krishanthisera/TechChallengeApp/blob/master/k8s-helm/tech-challenge/values.yaml). These values can be override by `--set <key>=<value>` directive
 | Parameter | Description | Default |
 | ------ | ------ | ------ |
 |app.replicaCount | To manage the number of the replicas | 3  |
-|app.config.enabled| To be enable if the application should connect external database <br> other than the default database| flase|
-|app.sleep| Grace priod which application should wait to serve|120|
+|app.config.enabled| To be enabled, if the application should connect to an external database <br> other than the default database| false|
+|app.sleep| The grace period which application should wait to serve|120|
 |db.persistData.enabled| If the application should maintain it data persistency |false|
 |db.persistData.storageClass.| Configure persistence storage class|N/A|
-|db.persistData.persistenceVolume.| Configure the volume. Note that this is **not** a reflection of the <br> Persistence Volumes (PV) of Kuberenetes|N/A|
-|job.sleep|Grace priod which application should wait to serve|160|
-|metricServer.enabled| If the Metric Server should be installed. <br> Even though this is not explistly enabled, enabling autosaclling may install the Metric Server|false|
+|db.persistData.persistenceVolume.| Configure the volume. Note that this is **not** a reflection of the <br> Persistence Volumes (PV) of Kubernetes|N/A|
+|job.sleep|Grace period which application should wait to seed the DB data|160|
+|metricServer.enabled| If the Metric Server should be installed. <br> Even though this is not explicitly enabled, enabling autoscaling may install the Metric Server|false|
 |nodePort.enabled| Configure a `NodePort` Kubernetes Service for external communication |true|
 |loadBalancer.enabled| Configure a `LoadBalncer` Kubernetes Service for external communication |true|
 
-_Note that, defaule configuration values for the application which feeds at the image build is override by [k8s-helm/tech-challenge/templates/app-config.yaml](https://github.com/krishanthisera/TechChallengeApp/blob/master/k8s-helm/tech-challenge/templates/app-config.yaml)_
+_Note that, default configuration values for the application which feeds at the image build overriddes by [k8s-helm/tech-challenge/templates/app-config.yaml](https://github.com/krishanthisera/TechChallengeApp/blob/master/k8s-helm/tech-challenge/templates/app-config.yaml)_
 #### With Jenkins
-Configuration to the Jenkins pipline,
+Configuration to the Jenkins pipeline,
 1. [Jenkinsfile](https://github.com/krishanthisera/TechChallengeApp/blob/master/Jenkinsfile)
 2. [jenkins-build.yaml](https://github.com/krishanthisera/TechChallengeApp/blob/master/jenkins-build.yaml)
 ![Pipeline](https://i.ibb.co/ZShf60K/Servian-pipe.png)
@@ -275,18 +275,17 @@ Jenkins required plugins:
 - [Docker plugin for Jenkins](https://github.com/jenkinsci/docker-plugin)
 - [Blue Ocean [Optional for better visualisation]](https://github.com/jenkinsci/blueocean-plugin)
 
-Apart from that the Kubernetes Plugin for Jenksin should be configured. In most cases Kubernetes cluster config file should be provided to Jenkins to create and manage Kubernetes cluster resource. 
-_Note that, It also can be done via a Kubernetes Service Account and Role Binding_
-To retrive the kube-config file,
+Apart from that, the Kubernetes Plugin for Jenkins should be configured. In most cases, Kubernetes cluster config file should be provided to Jenkins to create and manage Kubernetes cluster resource. Note that, It also can be done via a Kubernetes Service Account and Role Binding 
+<br>To retrieve the kube-config file,
 ```sh
-$ # cd into the Terrafrom dorectory
+$ # cd into the Terraform directory
 $ cd iac
 $ terraform output kubectl_config
 ```
-Further, credential for the docker repository should be configure in both the [Jenkinsfile ](https://github.com/krishanthisera/TechChallengeApp/blob/master/Jenkinsfile) and the Jenkins itself.
+Further, credential for the docker repository should be configured in both the [Jenkinsfile ](https://github.com/krishanthisera/TechChallengeApp/blob/master/Jenkinsfile) and the Jenkins itself.
 ##### Pipeline Specification
-- The `BUILD_NUMBER` enviorment variable will be used as the image tag
-- Customisation to the deplyment can done by setting the helm values
+- The BUILD_NUMBER environment variable will be used as the image tag
+- Customisation to the deployment can be done by setting the helm values
     ```sh
     steps {
              container('helm') {
@@ -294,9 +293,9 @@ Further, credential for the docker repository should be configure in both the [J
                 }
             }
     ```
-- The [jenkins-build.yaml](https://github.com/krishanthisera/TechChallengeApp/blob/master/jenkins-build.yaml) descibes a pod with required tools which may associate during the pipeline execution,
+- The [jenkins-build.yaml](https://github.com/krishanthisera/TechChallengeApp/blob/master/jenkins-build.yaml) describes a pod with required tools which may associate during the pipeline execution,
     - docker: To run the docker commands (build and push)
-    - hlem: To execute the Helm charts
+    - helm: To execute the Helm charts
          ```sh
         ...
         containers:
@@ -319,4 +318,4 @@ Further, credential for the docker repository should be configure in both the [J
             path: /var/run/docker.sock
         ...
          ```
-        Especially, the `docker container` privilage of the docker container has been escalated to root (which is not recommended to run on production enviorements) and it laverage the docker socket from the Host Machine to execute docker commands
+        Especially, the `docker container`s privilage has been escalated to root (which is not recommended to run on production environments) and it leverages the docker socket from the Host Machine to execute docker commands.
