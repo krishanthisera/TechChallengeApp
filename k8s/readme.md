@@ -2,7 +2,7 @@
 
 This is not the recomended way of deploying the application
 
-![Kubernetes](https://b.kisscc0.com/20180814/ooe/kisscc0-stop-sign-computer-icons-traffic-sign-logo-stop-sign-5b72976a4dcf37.6850562915342365223187.png) <br>
+![Kubernetes](https://b.kisscc0.com/20180814/ooe/kisscc0-stop-sign-computer-icons-traffic-sign-logo-stop-sign-5b72976a4dcf37.6850562915342365223187.png =25x) <br>
 
 > :reminder: **Those manifests to be used for reference purposes only**: Please refer: [k8s-helm/tech-challenge](https://github.com/krishanthisera/TechChallengeApp/tree/master/k8s-helm/tech-challenge)
 
