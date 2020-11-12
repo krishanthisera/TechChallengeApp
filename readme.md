@@ -329,7 +329,7 @@ Further, credential for the docker repository should be configured in both the [
           }
           ...
     ```
-    This may result in which pipeline stage to be used. 
+  This may result in which pipeline stage to be used. 
       ```sh
       ...
       parallel {
