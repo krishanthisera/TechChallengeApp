@@ -350,4 +350,4 @@ Further, credential for the docker repository should be configured in both the [
                         sh "helm upgrade --install '${RELEASE_NAME}' --set app.image.repository='${DOCKER_REGISTRY}' --set app.image.tag='${APP_VERSION}.${BUILD_NUMBER}' --namespace '${RELEASE_NAMESPACE}' ./k8s-helm/tech-challenge"
                     }
                 ...
-            ```
+      ```
