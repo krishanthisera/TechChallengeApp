@@ -145,9 +145,9 @@ The Application and the Database are running as two separate deployments. Even t
 
 In a scenario where there is no such a requirement for an ingress to be deployed, a NodePort service can be enabled by using the Helm value file or by setting the parameter at the Helm installation
 ```sh
-$ helm upgrade --install --force --set nodePort.enabled=true --set nodePort.port=<NODE_PORT> <RELEASE_NAME_ ./k8s-helm/tech-challenge
+$ helm upgrade --install --force --set nodePort.enabled=true --set nodePort.port=<NODE_PORT> <RELEASE_NAME_> ./k8s-helm/tech-challenge
 ```
-Optionally, as the easiest way to expose the application to external networks, a Kubernetes LoadBancer service can be used. This can be enable by setting `--set loadBalancer.enabled=true`
+Optionally, as the easiest way to expose the application to external networks, a Kubernetes LoadBancer service can be used. This can be enable by passing `--set loadBalancer.enabled=true` with the `helm upgrade`
 <br> or after the deployement,
 ```sh
 $ kubectl expose deploy servian-tech-challenge-app --type=LoadBalancer --port=80 --target-port=80
@@ -175,9 +175,9 @@ template:
 The application can be deployed either manually or by using the Jenkins pipeline. 
 #### Manual Deployment
 Dependencies:
-1. Terraform
-2. kubectl
-3. Helm
+1. Terraform (>= 0.12)
+2. kubectl 
+3. Helm (>=3.2.x)
 <br> Verify whether above componenets are installed in the system,
     ```sh
     $ # terraform
@@ -191,7 +191,7 @@ Dependencies:
     $ helm version
     version.BuildInfo{Version:"v3.4.0", GitCommit:"7090a89efc8a18f3d8178bf47d2462450349a004", GitTreeState:"dirty", GoVersion:"go1.15.3"}
     ```
-##### Deploy EKS cluster using Terraform
+#### Deploy EKS cluster using Terraform
 1. Define the all the required vaiable using [terraform.tfvars](https://github.com/krishanthisera/TechChallengeApp/blob/master/iac/terraform.tfvars) <br> It is reccomended that  **AWS_ACCESS_KEY_ID** and **AWS_SECRET_ACCESS_KEY** provide as enviorement variables,
       ```sh
         $ export AWS_ACCESS_KEY_ID=<YOUR_ACCESS_KEY>
@@ -205,7 +205,7 @@ Dependencies:
         $ terraform workspace new challenge
         $ terraform init 
       ```
-      It is recomended to maintain a centrlised directory to mange `.tfstate` file where Terraform stores its status of the deployment
+      It is recomended to maintain a centralised directory to mange `.tfstate` file where Terraform stores its status of the deployment
 3. Create the Terraform plan
      ```sh
         # cd into the Terraform directory 
@@ -226,7 +226,7 @@ Dependencies:
         # cd into the Terraform directory 
         $ kubectl cluster-info
       ```  
-##### Deploy the Application using Helm
+#### Deploy the Application using Helm
 - Install the application using the Helm chart,
    ```sh
       $ helm install <release-name> <path to the chart>
@@ -247,7 +247,7 @@ _Note that, to ingress to be installed it is required to configure AWS Route53 i
    ```sh
     helm uninstall <release-name>
    ```
-##### Helm Values
+#### Helm Values
 Helm chart's default values are available on the [tech-challenge/values.yaml](https://github.com/krishanthisera/TechChallengeApp/blob/master/k8s-helm/tech-challenge/values.yaml). These values can be override by `--set <key>=<value>` directive
 | Parameter | Description | Default |
 | ------ | ------ | ------ |
@@ -269,7 +269,7 @@ Configuration to the Jenkins pipeline,
 2. [jenkins-build.yaml](https://github.com/krishanthisera/TechChallengeApp/blob/master/jenkins-build.yaml)
 ![Pipeline](https://i.ibb.co/ZShf60K/Servian-pipe.png)
 
-##### Jenkins Dependencies
+#### Jenkins Dependencies
 Required plugins for Jenkins:
 - [Kubernetes plugin for Jenkins](https://github.com/jenkinsci/kubernetes-plugin)
 - [Docker plugin for Jenkins](https://github.com/jenkinsci/docker-plugin)
@@ -292,13 +292,13 @@ environment {
         APP_VERSION = '1.0'
     }
 ```
-##### Pipeline Specification
-- The BUILD_NUMBER environment variable is used as the image tag
+#### Pipeline Specification
+- The `BUILD_NUMBER` environment variable is used with the `APP_VERSION` as the image tag
 - Customisation to the deployment can be done by setting the helm values
     ```sh
     steps {
              container('helm') {
-                    sh "helm upgrade --install --force --set app.image.repository=${DOCKER_REGISTRY} --set app.image.tag=${BUILD_NUMBER} ${RELEASE_NAME} ./k8s-helm/tech-challenge"
+                    sh "helm upgrade --install --force --set app.image.repository=${DOCKER_REGISTRY} --set app.image.tag='${APP_VERSION}.${BUILD_NUMBER}' ${RELEASE_NAME} ./k8s-helm/tech-challenge"
                 }
             }
     ```
@@ -315,12 +315,16 @@ environment {
               allowPrivilegeEscalation: true
               runAsUser: 0
           tty: true
+          command:
+             - cat
           volumeMounts:
             - name: dockersock
               mountPath: /var/run/docker.sock
         - name: helm
           image: lachlanevenson/k8s-helm:v3.1.1
           tty: true
+          command:
+             - cat
       volumes:
         - name: dockersock
           hostPath:
