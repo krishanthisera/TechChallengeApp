@@ -45,7 +45,7 @@ pipeline {
                     when { expression { params.NEW_RELEASE } }
                     steps {
                         container('helm') {
-                            sh "helm install --set app.image.repository='${DOCKER_REGISTRY}' --set app.image.tag='${BUILD_NUMBER}' '${RELEASE_NAME}' ./k8s-helm/tech-challenge --create-namespace '${RELEASE_NAMESPACE}'"
+                            sh "helm install --set app.image.repository='${DOCKER_REGISTRY}' --set app.image.tag='${BUILD_NUMBER}' '${RELEASE_NAME}' ./k8s-helm/tech-challenge --namespace '${RELEASE_NAMESPACE}'"
                         }
                     }
                 }
@@ -62,7 +62,7 @@ pipeline {
                     steps {
                         container('helm') {
                             sh "helm delete --purge '${RELEASE_NAME}' --namespace '${RELEASE_NAMESPACE}'"
-                            sh "helm install --set app.image.repository='${DOCKER_REGISTRY}' --set app.image.tag='${BUILD_NUMBER}' '${RELEASE_NAME}' ./k8s-helm/tech-challenge --create-namespace '${RELEASE_NAMESPACE}'"
+                            sh "helm install --set app.image.repository='${DOCKER_REGISTRY}' --set app.image.tag='${BUILD_NUMBER}' '${RELEASE_NAME}' ./k8s-helm/tech-challenge --namespace '${RELEASE_NAMESPACE}'"
                         }
                     }
                 }
