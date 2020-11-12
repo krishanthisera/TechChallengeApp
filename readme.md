@@ -318,6 +318,8 @@ Further, credential for the docker repository should be configured in both the [
             path: /var/run/docker.sock
         ...
          ```
+         Especially, the `docker container`'s privilage has been escalated to root (which is not recommended to run on production environments) and it leverages the docker socket from the Host Machine to execute docker commands.
+        
 - Depending on the requirement, the Jenkins file should be manipulated manually. For example, it is mandatory to explicitly state whether it is a new release or a release upgrade.
     ```sh
         pipeline {
@@ -329,24 +331,23 @@ Further, credential for the docker repository should be configured in both the [
           }
           ...
     ```
-  This may result in which pipeline stage to be used. 
-      ```sh
-      ...
-      parallel {
-                stage ('Brand New Release'){
-                    when { expression { params.NEW_RELEASE } }
-                    steps {
-                        container('helm') {
-                            sh "helm install --set app.image.repository='${DOCKER_REGISTRY}' --set app.image.tag='${APP_VERSION}.${BUILD_NUMBER}' '${RELEASE_NAME}' ./k8s-helm/tech-challenge --namespace '${RELEASE_NAMESPACE}'"
-                        }
+    This may result in which pipeline stage to be used. 
+    ```sh
+    ...
+    parallel {
+            stage ('Brand New Release'){
+                when { expression { params.NEW_RELEASE } }
+                steps {
+                    container('helm') {
+                        sh "helm install --set app.image.repository='${DOCKER_REGISTRY}' --set app.image.tag='${APP_VERSION}.${BUILD_NUMBER}' '${RELEASE_NAME}' ./k8s-helm/tech-challenge --namespace '${RELEASE_NAMESPACE}'"
                     }
                 }
-                stage ('Updating the Release'){
-                    when { expression { !params.NEW_RELEASE } }
-                    steps {
-                        container('helm') {
-                            sh "helm upgrade --install '${RELEASE_NAME}' --set app.image.repository='${DOCKER_REGISTRY}' --set app.image.tag='${APP_VERSION}.${BUILD_NUMBER}' --namespace '${RELEASE_NAMESPACE}' ./k8s-helm/tech-challenge"
-                        }
-            ...
-      ```
-        Especially, the `docker container`'s privilage has been escalated to root (which is not recommended to run on production environments) and it leverages the docker socket from the Host Machine to execute docker commands.
+            }
+            stage ('Updating the Release'){
+                when { expression { !params.NEW_RELEASE } }
+                steps {
+                    container('helm') {
+                        sh "helm upgrade --install '${RELEASE_NAME}' --set app.image.repository='${DOCKER_REGISTRY}' --set app.image.tag='${APP_VERSION}.${BUILD_NUMBER}' --namespace '${RELEASE_NAMESPACE}' ./k8s-helm/tech-challenge"
+                    }
+                ...
+            ```
