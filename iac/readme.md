@@ -26,20 +26,20 @@ Verify whether [Terraform is installed](https://learn.hashicorp.com/tutorials/te
 ```sh
 $ terraform version
 ```
-1. Define all the required vaiable using [terraform.tfvars](https://github.com/krishanthisera/TechChallengeApp/blob/master/iac/terraform.tfvars) <br> It is reccomended that  **AWS_ACCESS_KEY_ID** and **AWS_SECRET_ACCESS_KEY** provide as enviorement variables,
+1. Define all the required variables using [terraform.tfvars](https://github.com/krishanthisera/TechChallengeApp/blob/master/iac/terraform.tfvars) <br> It is reccomended that  **AWS_ACCESS_KEY_ID** and **AWS_SECRET_ACCESS_KEY** provide as enviorement variables,
       ```sh
         $ export AWS_ACCESS_KEY_ID=<YOUR_ACCESS_KEY>
         $ export AWS_SECRET_ACCESS_KEY=<YOUR_SECRET_KEY>
       ```
-      Or even better to use [HashiCorp Vault](https://www.hashicorp.com/resources/managing-vault-with-terraform)
-      optionally Ingress can be enabled by allowing [load-balancer.tf_exclude](https://github.com/krishanthisera/TechChallengeApp/blob/master/iac/load-balancer.tf_exclude) to execute.
-2. Create terraform workspace and initialise terraform
+      Or even better to use [HashiCorp Vault.](https://www.hashicorp.com/resources/managing-vault-with-terraform)
+      <br>Optionally Ingress can be enabled by allowing [load-balancer.tf_exclude](https://github.com/krishanthisera/TechChallengeApp/blob/master/iac/load-balancer.tf_exclude) to execute.
+2. Create Terraform workspace and initialise terraform
       ```sh
         $ # cd into the Terraform directory 
         $ terraform workspace new development
         $ terraform init 
       ```
-      It is recommended to maintain a centralised directory to manage `.tfstate` file where Terraform stores its status of the deployment
+      It is recommended to maintain a centralised directory to manage `.tfstate` file where Terraform stores its status of the deployment.
 3. Create the Terraform plan
      ```sh
         # cd into the Terraform directory 
