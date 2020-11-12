@@ -283,6 +283,15 @@ $ cd iac
 $ terraform output kubectl_config
 ```
 Further, credential for the docker repository should be configured in both the [Jenkinsfile ](https://github.com/krishanthisera/TechChallengeApp/blob/master/Jenkinsfile) and the Jenkins itself.
+```sh
+environment {
+        DOCKER_REGISTRY = 'krishees/techchallengeapp'
+        DOCKER_REGISTRY_CREDENTIAL = 'docker_hub'
+        RELEASE_NAME = 'servian' 
+        RELEASE_NAMESPACE = 'servian'
+        APP_VERSION = '1.0'
+    }
+```
 ##### Pipeline Specification
 - The BUILD_NUMBER environment variable is used as the image tag
 - Customisation to the deployment can be done by setting the helm values
