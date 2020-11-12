@@ -3,7 +3,7 @@ pipeline {
         //Helm will treat this as a new release
         booleanParam(name: "NEW_RELEASE", defaultValue: true)
         //Helm will purge the old release and redeploy the release
-        booleanParam(name: "PURGE_RELEASE", defaultValue: false)
+        //booleanParam(name: "PURGE_RELEASE", defaultValue: false)
     }
     environment {
         DOCKER_REGISTRY = 'krishees/techchallengeapp'
@@ -55,15 +55,6 @@ pipeline {
                     steps {
                         container('helm') {
                             sh "helm upgrade --install '${RELEASE_NAME}' --set app.image.repository='${DOCKER_REGISTRY}' --set app.image.tag='${APP_VERSION}.${BUILD_NUMBER}' --namespace '${RELEASE_NAMESPACE}' ./k8s-helm/tech-challenge"
-                        }
-                    }
-                }
-                stage ('Purge and Deploy'){
-                    when { expression { params.PURGE_RELEASE } }
-                    steps {
-                        container('helm') {
-                            sh "helm delete --purge '${RELEASE_NAME}' --namespace '${RELEASE_NAMESPACE}'"
-                            sh "helm install --set app.image.repository='${DOCKER_REGISTRY}' --set app.image.tag='${APP_VERSION}.${BUILD_NUMBER}' '${RELEASE_NAME}' ./k8s-helm/tech-challenge --namespace='${RELEASE_NAMESPACE}' --create-namespace"
                         }
                     }
                 }

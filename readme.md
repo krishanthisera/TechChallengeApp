@@ -1,5 +1,5 @@
 # Servian DevOps Tech Challenge - Tech Challenge App
-
+[![Build Status](https://ci.bizkt.com.au/buildStatus/icon?job=TechChallengeApp%2Fmaster)](https://ci.bizkt.com.au/job/TechChallengeApp/job/master/)
 [![Build Status][circleci-badge]][circleci]
 [![Release][release-badge]][release]
 [![GoReportCard][report-badge]][report]
@@ -67,6 +67,9 @@ Information about the assessment is available in the [assessment.md file](ASSESS
 If you've found an issue with the application, the documentation, or anything else, we are happy to take contributions. Please raise an issue in the [github repository](https://github.com/Servian/TechChallengeApp/issues) and read through the contribution rules found the [CONTRIBUTING.md](CONTRIBUTING.md) file for the details.
 
 # Solution Implementation
+
+[![Build Status](https://ci.bizkt.com.au/buildStatus/icon?job=TechChallengeApp%2Fmaster)](https://ci.bizkt.com.au/job/TechChallengeApp/job/master/)
+
 The following section summarises the solution architecture and instructions to deploy the application. The following list of the files was introduced/manipulated during the implementation process (to the master branch).
 ```sh
 ├── Dockerfile 
@@ -317,4 +320,35 @@ Further, credential for the docker repository should be configured in both the [
             path: /var/run/docker.sock
         ...
          ```
+- Depending on the requirement, the Jenkins file should be manipulated manually. For example, it is mandatory to explicitly state whether it is a new release or a release upgrade.
+    ```sh
+        pipeline {
+          parameters {
+            //Helm will treat this as a new release
+            booleanParam(name: "NEW_RELEASE", defaultValue: true)
+            //Helm will purge the old release and redeploy the release
+            //booleanParam(name: "PURGE_RELEASE", defaultValue: false)
+          }
+          ...
+    ```
+      This may result in which pipeline stage to be used. 
+      ```sh
+      ...
+      parallel {
+                stage ('Brand New Release'){
+                    when { expression { params.NEW_RELEASE } }
+                    steps {
+                        container('helm') {
+                            sh "helm install --set app.image.repository='${DOCKER_REGISTRY}' --set app.image.tag='${APP_VERSION}.${BUILD_NUMBER}' '${RELEASE_NAME}' ./k8s-helm/tech-challenge --namespace '${RELEASE_NAMESPACE}'"
+                        }
+                    }
+                }
+                stage ('Updating the Release'){
+                    when { expression { !params.NEW_RELEASE } }
+                    steps {
+                        container('helm') {
+                            sh "helm upgrade --install '${RELEASE_NAME}' --set app.image.repository='${DOCKER_REGISTRY}' --set app.image.tag='${APP_VERSION}.${BUILD_NUMBER}' --namespace '${RELEASE_NAMESPACE}' ./k8s-helm/tech-challenge"
+                        }
+            ...
+      ```
         Especially, the `docker container`'s privilage has been escalated to root (which is not recommended to run on production environments) and it leverages the docker socket from the Host Machine to execute docker commands.

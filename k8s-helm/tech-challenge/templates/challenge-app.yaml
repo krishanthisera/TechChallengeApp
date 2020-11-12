@@ -20,7 +20,7 @@ spec:
       labels:
         {{- include "tech-challenge.selectorLabels" . | nindent 8 }}
         app: challenge-app
-        version: {{ .Values.app.appVersion }}
+        version: {{ .Values.app.appVersion | toString }}
     spec:
       {{- with .Values.app.imagePullSecrets }}
       imagePullSecrets:
