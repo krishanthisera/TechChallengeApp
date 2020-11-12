@@ -21,7 +21,7 @@ spec:
       labels:
         {{- include "tech-challenge.selectorLabels" . | nindent 8 }}
         app: challenge-db
-        version: {{ .Values.app.image.tag | default .Chart.AppVersion }}
+        version: {{ .Values.app.image.tag | toString }}
     spec:
       {{- with .Values.app.imagePullSecrets }}
       imagePullSecrets:
@@ -29,7 +29,7 @@ spec:
       {{- end }}
       containers:
         - name: postgress
-          image: "{{ .Values.db.image.repository }}:{{ .Values.db.image.tag | default .Chart.AppVersion }}"
+          image: "{{ .Values.db.image.repository }}:{{ .Values.db.image.tag | toString }}"
           imagePullPolicy: {{ .Values.app.image.pullPolicy }}
           envFrom:
           - secretRef:

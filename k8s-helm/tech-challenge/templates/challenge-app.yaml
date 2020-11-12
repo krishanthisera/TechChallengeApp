@@ -28,7 +28,7 @@ spec:
       {{- end }}
       containers:
         - name: go
-          image: "{{ .Values.app.image.repository }}:{{ .Values.app.image.tag | default .Chart.AppVersion }}"
+          image: "{{ .Values.app.image.repository }}:{{ .Values.app.image.tag | toString }}"
           imagePullPolicy: {{ .Values.app.image.pullPolicy }}
           envFrom:
           - secretRef:
