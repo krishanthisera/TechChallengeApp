@@ -10,6 +10,7 @@ pipeline {
         DOCKER_REGISTRY_CREDENTIAL = 'docker_hub'
         RELEASE_NAME = 'servian' 
         RELEASE_NAMESPACE = 'servian'
+        APP_VERSION = '1.0'
     }
     agent {
         kubernetes {
@@ -26,7 +27,7 @@ pipeline {
         stage('Docker Build') {
             steps {
                 container('docker') {
-                    sh "docker build -t ${DOCKER_REGISTRY}:${BUILD_NUMBER} ."
+                    sh "docker build -t ${DOCKER_REGISTRY}:${APP_VERSION}.${BUILD_NUMBER} ."
                 }
             }
         }
@@ -34,7 +35,7 @@ pipeline {
             steps {
                 container('docker') {
                     withDockerRegistry([credentialsId: "${DOCKER_REGISTRY_CREDENTIAL}", url: "https://index.docker.io/v1/"]) {
-                        sh "docker push ${DOCKER_REGISTRY}:${BUILD_NUMBER}"
+                        sh "docker push ${DOCKER_REGISTRY}:${APP_VERSION}.${BUILD_NUMBER}"
                     }
                 }
             }
@@ -45,7 +46,7 @@ pipeline {
                     when { expression { params.NEW_RELEASE } }
                     steps {
                         container('helm') {
-                            sh "helm install --set app.image.repository='${DOCKER_REGISTRY}' --set app.image.tag='${BUILD_NUMBER}' '${RELEASE_NAME}' ./k8s-helm/tech-challenge --namespace '${RELEASE_NAMESPACE}'"
+                            sh "helm install --set app.image.repository='${DOCKER_REGISTRY}' --set app.image.tag='${APP_VERSION}.${BUILD_NUMBER}' '${RELEASE_NAME}' ./k8s-helm/tech-challenge --namespace '${RELEASE_NAMESPACE}'"
                         }
                     }
                 }
@@ -53,7 +54,7 @@ pipeline {
                     when { expression { !params.NEW_RELEASE } }
                     steps {
                         container('helm') {
-                            sh "helm upgrade --install '${RELEASE_NAME}' --set app.image.repository='${DOCKER_REGISTRY}' --set app.image.tag='${BUILD_NUMBER}' --namespace '${RELEASE_NAMESPACE}' ./k8s-helm/tech-challenge"
+                            sh "helm upgrade --install '${RELEASE_NAME}' --set app.image.repository='${DOCKER_REGISTRY}' --set app.image.tag='${APP_VERSION}.${BUILD_NUMBER}' --namespace '${RELEASE_NAMESPACE}' ./k8s-helm/tech-challenge"
                         }
                     }
                 }
@@ -62,7 +63,7 @@ pipeline {
                     steps {
                         container('helm') {
                             sh "helm delete --purge '${RELEASE_NAME}' --namespace '${RELEASE_NAMESPACE}'"
-                            sh "helm install --set app.image.repository='${DOCKER_REGISTRY}' --set app.image.tag='${BUILD_NUMBER}' '${RELEASE_NAME}' ./k8s-helm/tech-challenge --namespace='${RELEASE_NAMESPACE}' --create-namespace"
+                            sh "helm install --set app.image.repository='${DOCKER_REGISTRY}' --set app.image.tag='${APP_VERSION}.${BUILD_NUMBER}' '${RELEASE_NAME}' ./k8s-helm/tech-challenge --namespace='${RELEASE_NAMESPACE}' --create-namespace"
                         }
                     }
                 }
