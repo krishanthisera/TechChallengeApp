@@ -41,7 +41,7 @@ pipeline {
         }
         stage('Kubernetes Deploy') {
             parallel {
-                stage ('Deploying A Brand New Release'){
+                stage ('Brand New Release'){
                     when { expression { params.NEW_RELEASE } }
                     steps {
                         container('helm') {
