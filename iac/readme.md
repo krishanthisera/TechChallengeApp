@@ -1,5 +1,5 @@
 # Tech-Challenge-IaC
-[![Terraform](https://www.terraform.io/assets/images/logo-hashicorp-3f10732f.svg)
+![Terraform](https://www.terraform.io/assets/images/logo-hashicorp-3f10732f.svg)
 
 An Elastic Kubernetes Cluster will be provisioned as the result of this execution.
 
