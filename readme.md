@@ -262,7 +262,7 @@ Helm chart's default values are available on the [tech-challenge/values.yaml](ht
 |nodePort.enabled| Configure a `NodePort` Kubernetes Service for external communication |true|
 |loadBalancer.enabled| Configure a `LoadBalncer` Kubernetes Service for external communication |true|
 
-_Note that, default configuration values for the application which feeds at the image build overriddes by [k8s-helm/tech-challenge/templates/app-config.yaml](https://github.com/krishanthisera/TechChallengeApp/blob/master/k8s-helm/tech-challenge/templates/app-config.yaml)_
+_Note that, default configuration values for the application which feeds at the image build overrides by [k8s-helm/tech-challenge/templates/app-config.yaml](https://github.com/krishanthisera/TechChallengeApp/blob/master/k8s-helm/tech-challenge/templates/app-config.yaml)_
 #### With Jenkins
 Configuration to the Jenkins pipeline,
 1. [Jenkinsfile](https://github.com/krishanthisera/TechChallengeApp/blob/master/Jenkinsfile)
