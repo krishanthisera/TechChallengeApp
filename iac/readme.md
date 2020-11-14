@@ -48,7 +48,7 @@ $ terraform version
 4. Apply the changes 
      ```sh
         # cd into the Terraform directory 
-        $ terraform apply development.tfplan
+        $ terraform apply plan.tfplan
       ```
 5. Configure `kubectl`
      ```sh
